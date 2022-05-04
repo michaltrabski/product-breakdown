@@ -1,11 +1,62 @@
 import React, { useState } from "react";
 import "./App.css";
+import Fixings from "./components/fixings";
+import Products from "./components/product";
+import ProductBreakdowns from "./components/productBreakdowns";
+import { mapFixings, mapProducts, mapProductBreakdowns } from "./utils/utils";
 
+const fakeBigJson = "paste bigJson here";
+
+const fakeBigJson1 = JSON.stringify(
+  {
+    "Kit Breakdown": [
+      {
+        Product: "Universal Swing Gate",
+        Code: "A-01-01-0001",
+        "Code Item": "A-01-01-0001-1",
+        "Kit Description": "Ped Post, BLK",
+        "Component Code": "B-02-01-0036",
+        Category: "Fixing",
+        "Component Description": "12mm Hex Head Through Bolt, Z/P (4pk)",
+        "Qty Required": "1",
+        "In Products Tab": "4",
+        "Product&#10;Component": "Universal Swing Gate B-02-01-0036",
+      },
+    ],
+  },
+  null,
+  2
+);
+
+const fakeBigJsonFixings = JSON.stringify(
+  {
+    Products: [],
+    "Fixing Change": [
+      {
+        Product: "eFlex™ Double RackEnd Barrier",
+        Baseplate: "Stainless Steel CSK",
+        "Fixing ": "Chemical Sleeve",
+        "Product&#10;Baseplate&#10;Key": "eFlex™ Double RackEnd Barrier Stainless Steel CSK Chemical Sleeve 1",
+        Notes: "Remove 4 from BOM if fixing selected",
+        "Product Part Key": "eFlex™ Double RackEnd Barrier B-02-01-0008",
+        Code: "B-02-01-0008",
+        Category: "Fixing",
+        Description: "15mm CSK SKT Head Through Bolt, A2",
+        "Qty Required": "-4",
+      },
+    ],
+  },
+  null,
+  2
+);
 function App() {
-  const [bigJson, setBigJson] = useState<any>("paste bigJson here");
-  const [products, setProducts] = useState<any>("");
+  const [bigJson, setBigJson] = useState<any>(fakeBigJson);
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const [products, setProducts] = useState<any>("");
+  const [fixings, setFixings] = useState<any>("");
+  const [productBreakdowns, setProductsBreakdowns] = useState<any[]>([""]);
+
+  const handleBigJsonChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     e.preventDefault();
     setBigJson(e.target.value);
   };
@@ -16,8 +67,12 @@ function App() {
     try {
       const parsedBigJson = JSON.parse(bigJson);
       setProducts(mapProducts(parsedBigJson));
+      setFixings(mapFixings(parsedBigJson));
+      setProductsBreakdowns(mapProductBreakdowns(parsedBigJson));
     } catch (err) {
       setProducts("bigJson parsed error");
+      setFixings("bigJson parsed error");
+      setProductsBreakdowns(["bigJson parsed error"]);
     }
   };
 
@@ -42,119 +97,37 @@ function App() {
       </div>
       <div>
         <form>
-          <textarea style={{ width: "100%" }} rows={10} value={bigJson} onChange={handleChange} />
+          <textarea style={{ width: "100%" }} rows={10} value={bigJson} onChange={handleBigJsonChange} />
           <button type="submit" onClick={handleClick}>
             Format bigJson
           </button>
         </form>
       </div>
+      <br />
+      <br />
+      <br />
+      <br />
 
-      <div>
-        <h2>Products.ts</h2>
-        <textarea
-          style={{ width: "100%" }}
-          rows={products instanceof Array && products.length > 3 ? 30 : 5}
-          value={JSON.stringify(products, null, 2)}
-          readOnly
-        />
-        {/* <pre>{JSON.stringify(products.slice(0,1), null, 2)}</pre> */}
-      </div>
+      <ProductBreakdowns productBreakdowns={productBreakdowns} />
+      <br />
+      <br />
+      <br />
+      <br />
+
+      <Fixings fixings={fixings} />
+      <br />
+      <br />
+      <br />
+      <br />
+
+      <Products products={products} />
+      <br />
+      <br />
+      <br />
+      <br />
+
     </div>
   );
 }
 
 export default App;
-
-const mapProducts = (bigJson: any) => {
-  if (!Object.keys(bigJson).length) return ["wrong bigJson"];
-
-  const CODE = "Code";
-  const IS_KIT = "Is Kit?";
-  const SUB_CATEGORY = "&#10;Sub Category";
-  const DEPTH = "Depth&#10;(mm)";
-  const DIAMETER = "Diameter&#10;(mm)";
-  const HEIGHT = "Height&#10;(mm)";
-  const WIDTH = "Width&#10;(mm)";
-  const LENGTH = "Length&#10;(mm)";
-  const OPENING_LENGTH = "Opening&#10;Length&#10;(mm)";
-  const BASEPLATE = "Baseplate";
-  const COLOUR = "Colour";
-  const FITTING_COLOUR = "Fitting Colour";
-  const FIXINGS = "Fixings";
-  const DESCRIPTION = "Description";
-  const QTY = "Qty";
-
-  const mappedProducts = bigJson.Products.map((p: any) => ({
-    product: p["Product"],
-    category: p["Category"],
-    code: p[CODE],
-    isKit: p[IS_KIT] === "1" ? true : false,
-    subCategory: p[SUB_CATEGORY] === "N/A" ? "undefined" : p[SUB_CATEGORY],
-    depth: p[DEPTH] === "N/A" ? "undefined" : +p[DEPTH],
-    diameter: p[DIAMETER] === "N/A" ? "undefined" : +p[DIAMETER],
-    height: p[HEIGHT] === "N/A" ? "undefined" : +p[HEIGHT],
-    width: p[WIDTH] === "N/A" ? "undefined" : +p[WIDTH],
-    length: p[LENGTH] === "N/A" ? "undefined" : +p[LENGTH],
-    openingLength: p[OPENING_LENGTH] === "N/A" ? "undefined" : +p[OPENING_LENGTH],
-    baseplate: p[BASEPLATE] === "N/A" ? "undefined" : p[BASEPLATE],
-    colour: p[COLOUR] === "N/A" ? "undefined" : p[COLOUR],
-    fittingColour: p[FITTING_COLOUR] === "N/A" ? "undefined" : p[FITTING_COLOUR],
-    fixing: p[FIXINGS] === "N/A" ? "undefined" : p[FIXINGS],
-    description: p[DESCRIPTION] === "N/A" ? "undefined" : p[DESCRIPTION],
-    qty: +p[QTY],
-  }));
-
-  return mappedProducts;
-};
-
-const getBigJson = () => {
-  return {
-    "Revision History": [],
-    Products: [
-      {
-        Product: "eFlex™ Double RackEnd Barrier",
-        Category: "Post",
-        Code: "A-01-05-0211",
-        "Is Kit?": "1",
-        "&#10;Sub Category": "End",
-        "Depth&#10;(mm)": "N/A",
-        "Diameter&#10;(mm)": "210",
-        "Height&#10;(mm)": "512",
-        "Width&#10;(mm)": "N/A",
-        "Length&#10;(mm)": "N/A",
-        "Opening&#10;Length&#10;(mm)": "N/A",
-        Baseplate: "Standard CSK",
-        Colour: "Yellow",
-        "Fitting Colour": "Yellow",
-        Fixings: "Standard",
-        "Product – Component": "N/A",
-        "Product (Height) Component Key": "N/A",
-        Description: "R. E. B. Post DR, YEL, CSK - End",
-        Qty: "1",
-        "Number&#10;Different&#10;parts": "7",
-      },
-      {
-        Product: "eFlex™ Double RackEnd Barrier",
-        Category: "Post",
-        Code: "A-01-05-0212",
-        "Is Kit?": "1",
-        "&#10;Sub Category": "Mid",
-        "Depth&#10;(mm)": "N/A",
-        "Diameter&#10;(mm)": "210",
-        "Height&#10;(mm)": "512",
-        "Width&#10;(mm)": "N/A",
-        "Length&#10;(mm)": "N/A",
-        "Opening&#10;Length&#10;(mm)": "N/A",
-        Baseplate: "Standard CSK",
-        Colour: "Yellow",
-        "Fitting Colour": "Yellow",
-        Fixings: "Standard",
-        "Product – Component": "N/A",
-        "Product (Height) Component Key": "N/A",
-        Description: "R. E. B. Post DR, YEL, CSK  - 2D - Mid",
-        Qty: "1",
-        "Number&#10;Different&#10;parts": "7",
-      },
-    ],
-  };
-};
