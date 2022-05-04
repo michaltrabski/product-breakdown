@@ -17,7 +17,7 @@ function Products(props: Props) {
         <p>I make arr.slice(0,{SLICE_PRODUCTS_AT})</p>
         <textarea
           style={{ width: "100%" }}
-          rows={products instanceof Array && products.length > 3 ? 30 : 5}
+          rows={products instanceof Array && products.length > 3 ? 30 : 3}
           value={JSON.stringify(products.slice(0, SLICE_PRODUCTS_AT), null, 2)}
           readOnly
         />
@@ -27,7 +27,7 @@ function Products(props: Props) {
         <p>I make arr.slice({SLICE_PRODUCTS_AT})</p>
         <textarea
           style={{ width: "100%" }}
-          rows={products instanceof Array && products.length > 3 ? 30 : 5}
+          rows={products instanceof Array && products.length > 3 ? 30 : 3}
           value={JSON.stringify(products.slice(SLICE_PRODUCTS_AT), null, 2)}
           readOnly
         />

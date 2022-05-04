@@ -5,52 +5,9 @@ import Products from "./components/product";
 import ProductBreakdowns from "./components/productBreakdowns";
 import { mapFixings, mapProducts, mapProductBreakdowns } from "./utils/utils";
 
-const fakeBigJson = "paste bigJson here";
 
-const fakeBigJson1 = JSON.stringify(
-  {
-    "Kit Breakdown": [
-      {
-        Product: "Universal Swing Gate",
-        Code: "A-01-01-0001",
-        "Code Item": "A-01-01-0001-1",
-        "Kit Description": "Ped Post, BLK",
-        "Component Code": "B-02-01-0036",
-        Category: "Fixing",
-        "Component Description": "12mm Hex Head Through Bolt, Z/P (4pk)",
-        "Qty Required": "1",
-        "In Products Tab": "4",
-        "Product&#10;Component": "Universal Swing Gate B-02-01-0036",
-      },
-    ],
-  },
-  null,
-  2
-);
-
-const fakeBigJsonFixings = JSON.stringify(
-  {
-    Products: [],
-    "Fixing Change": [
-      {
-        Product: "eFlex™ Double RackEnd Barrier",
-        Baseplate: "Stainless Steel CSK",
-        "Fixing ": "Chemical Sleeve",
-        "Product&#10;Baseplate&#10;Key": "eFlex™ Double RackEnd Barrier Stainless Steel CSK Chemical Sleeve 1",
-        Notes: "Remove 4 from BOM if fixing selected",
-        "Product Part Key": "eFlex™ Double RackEnd Barrier B-02-01-0008",
-        Code: "B-02-01-0008",
-        Category: "Fixing",
-        Description: "15mm CSK SKT Head Through Bolt, A2",
-        "Qty Required": "-4",
-      },
-    ],
-  },
-  null,
-  2
-);
 function App() {
-  const [bigJson, setBigJson] = useState<any>(fakeBigJson);
+  const [bigJson, setBigJson] = useState<any>("paste bigJson here");
 
   const [products, setProducts] = useState<any>("");
   const [fixings, setFixings] = useState<any>("");
@@ -85,6 +42,7 @@ function App() {
             <span>1. </span>
             <span>Convert whole excel with breakdown to one big json file.</span>
             <br />
+            <strong>You have to use this tool: </strong>
             <a href="https://beautifytools.com/excel-to-json-converter.php">
               https://beautifytools.com/excel-to-json-converter.php
             </a>
@@ -92,6 +50,22 @@ function App() {
           <li>
             <span>2. </span>
             <span>Paste big json to textarea.</span>
+          </li>
+          <li>
+            <span>3. </span>
+            <span>Click format bigJson. It takes some time... :)</span>
+          </li>
+          <li>
+            <span>4. </span>
+            <span>You will get arrays ready to copy and paste.</span>
+          </li>
+          <li>
+            <span>5. </span>
+            <span>You will have to format stringified version to normal json in your edditor.</span>
+          </li>
+          <li>
+            <span>6. </span>
+            <span>Use ctrl+h to replace all "undefined" to normal undefined.</span>
           </li>
         </ul>
       </div>

@@ -17,7 +17,7 @@ function ProductBreakdowns(props: Props) {
         <p>I make arr.slice(0,{SLICE_AT})</p>
         <textarea
           style={{ width: "100%" }}
-          rows={5}
+          rows={data instanceof Array && data.length > 3 ? 30 : 3}
           value={JSON.stringify(data.slice(0, SLICE_AT), null, 2)}
           readOnly
         />
@@ -27,7 +27,7 @@ function ProductBreakdowns(props: Props) {
         <p>I make arr.slice({SLICE_AT})</p>
         <textarea
           style={{ width: "100%" }}
-          rows={5}
+          rows={data instanceof Array && data.length > 3 ? 30 : 3}
           value={JSON.stringify(data.slice(SLICE_AT), null, 2)}
           readOnly
         />

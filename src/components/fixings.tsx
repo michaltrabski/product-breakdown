@@ -14,7 +14,7 @@ function Fixings(props: Props) {
         <p>const fixings: ProductFixing[] =</p>
         <textarea
           style={{ width: "100%" }}
-          rows={5}
+          rows={fixings instanceof Array && fixings.length > 3 ? 30 : 3}
           value={JSON.stringify(fixings, null, 2)}
           readOnly
         />
